@@ -1,6 +1,9 @@
 import postcss from 'postcss';
 import processTailwindFeatures from 'tailwindcss/src/processTailwindFeatures.js';
-import resolveConfig from 'tailwindcss/src/public/resolve-config.js';
+import { generateRules as importedGenerateRules } from 'tailwindcss/src/lib/generateRules.js'
+import { createContext as importedCreateContext } from 'tailwindcss/src/lib/setupContextUtils.js'
+import importedExpandApplyAtRules from 'tailwindcss/src/lib/expandApplyAtRules.js'
+import importedResolveConfig  from 'tailwindcss/src/public/resolve-config.js';
 
 export const createTailwindcss: typeof import('..').createTailwindcss = (
   { tailwindConfig } = {},
@@ -23,7 +26,7 @@ export const createTailwindcss: typeof import('..').createTailwindcss = (
 };
 
 export const createTailwindcssPlugin: typeof import('..').createTailwindcssPlugin = ({ tailwindConfig, content: contentCollection }) => {
-  const config = resolveConfig(tailwindConfig ?? {});
+  const config = importedResolveConfig (tailwindConfig ?? {});
   const tailwindcssPlugin = processTailwindFeatures(
     (processOptions) => () => processOptions.createContext(
       config,
@@ -37,5 +40,10 @@ export const jitBrowserTailwindcss: typeof import('..').default = (tailwindMainC
   const tailwindcss = createTailwindcss({tailwindConfig: userTailwindConfig})
   return tailwindcss.generateStylesFromContent(tailwindMainCss, [jitContent])
 }
+
+export const resolveConfig = importedResolveConfig;
+export const expandApplyAtRules = importedExpandApplyAtRules; 
+export const createContext = importedCreateContext; 
+export const generateRules = importedGenerateRules; 
 
 export default jitBrowserTailwindcss;
